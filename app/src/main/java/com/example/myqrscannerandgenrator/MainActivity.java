@@ -65,27 +65,33 @@ public class MainActivity extends AppCompatActivity {
 
         final IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (result != null && result.getContents() != null) {
-            String str = result.getContents();
-            String[] arrOfStr = str.split("otpauth://totp/");
-            str = arrOfStr[1];
-            arrOfStr = str.split(":");
-            String appName = arrOfStr[0];
-            str = arrOfStr[1];
-            arrOfStr = str.split("secret=");
-            String userEmail = arrOfStr[0];
-            userEmail = userEmail.substring(0, userEmail.length() - 1);
-            str = arrOfStr[1];
-            arrOfStr = str.split("&issuer");
-            secretCode = arrOfStr[0];
-            String appDetails = appName + "(" + userEmail + ")";
+            
+            try {
+                String str = result.getContents();
+                String[] arrOfStr = str.split("otpauth://totp/");
+                str = arrOfStr[1];
+                arrOfStr = str.split(":");
+                String appName = arrOfStr[0];
+                str = arrOfStr[1];
+                arrOfStr = str.split("secret=");
+                String userEmail = arrOfStr[0];
+                userEmail = userEmail.substring(0, userEmail.length() - 1);
+                str = arrOfStr[1];
+                arrOfStr = str.split("&issuer");
+                secretCode = arrOfStr[0];
+                String appDetails = appName + "(" + userEmail + ")";
 
-            userData.setText(appDetails);
-            userData.setVisibility(View.VISIBLE);
-            info.setVisibility(View.VISIBLE);
-            codeInfo.setVisibility(View.VISIBLE);
-            String otpCode = Utils.getTOTPCode(secretCode);
-            startTimer();
-            currentCode.setText(otpCode);
+                userData.setText(appDetails);
+                userData.setVisibility(View.VISIBLE);
+                info.setVisibility(View.VISIBLE);
+                codeInfo.setVisibility(View.VISIBLE);
+                String otpCode = Utils.getTOTPCode(secretCode);
+                startTimer();
+                currentCode.setText(otpCode);
+            } catch (Exception e) {
+                Toast.makeText(this, "Please Scan Code Provided By Aliva Tech", Toast.LENGTH_LONG).show();
+            }
+
         }
 
         super.onActivityResult(requestCode, resultCode, data);
